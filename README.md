@@ -1,15 +1,29 @@
-# ImageNet Model Inference - Streamlit Application
+# ImageNet Vision AI - Streamlit Application
 
-A dockerized Streamlit application for performing inference on images using trained ImageNet models.
+A beautiful, production-ready Streamlit application for performing inference on images using trained ImageNet models. Features stunning UI/UX with drag-and-drop, multiple image uploads, and real-time predictions.
 
 ## 🚀 Features
 
-- **Easy-to-use Interface**: Upload images and get predictions instantly
-- **Flexible Model Loading**: Use pretrained models or load your custom trained models
-- **Top-K Predictions**: View multiple predictions with confidence scores
+### 🎨 Beautiful User Interface
+- **Gradient Design**: Modern purple gradient theme with smooth animations
+- **Drag & Drop**: Intuitive drag-and-drop interface for image uploads
+- **Multiple Images**: Upload and process multiple images simultaneously
+- **Prediction Cards**: Stunning card-based design with medals (🥇🥈🥉) for top predictions
+- **Color-Coded Confidence**: Visual indicators (green/orange/gray) based on confidence levels
+- **Real-Time Stats**: Dashboard showing upload count, device, and settings
+
+### 🔥 Core Functionality
+- **Flexible Model Loading**: Use pretrained models or load your custom Lightning checkpoints
+- **Batch Processing**: Process multiple images in one session
+- **Top-K Predictions**: View 1-10 top predictions per image
 - **Confidence Filtering**: Filter predictions by confidence threshold
+- **Inference Metrics**: Display inference time for each image
+- **Batch Export**: Download all predictions as JSON
+
+### 🐳 Deployment
 - **Docker Support**: Fully containerized for easy deployment
 - **GPU Support**: Automatically uses GPU if available
+- **Hot Reload**: Development mode with code hot-reloading
 
 ## 📁 Project Structure
 
@@ -76,14 +90,31 @@ By default, the application uses a pretrained ResNet50 model from torchvision. S
 
 ### Using Custom Trained Models
 
-1. Place your trained model checkpoint in the `models/` directory
-2. In the sidebar, enter the path to your model (e.g., `/app/models/my_model.pth`)
+This application is designed to work with models trained using the ImageNet training codebase at `/home/ubuntu/imagenet`.
+
+#### Loading PyTorch Lightning Checkpoints
+
+1. Place your trained checkpoint in the `models/` directory
+2. In the sidebar, enter the path to your checkpoint (e.g., `/app/models/resnet50-epoch=89.ckpt`)
 3. Upload an image for inference
 
-**Note:** The model loader expects PyTorch checkpoint files (.pth or .pt) with one of these formats:
-- Direct state dict: `torch.load('model.pth')`
-- Dictionary with `'model_state_dict'` key
-- Dictionary with `'state_dict'` key
+**Example:**
+```bash
+# Copy checkpoint from training directory
+cp /home/ubuntu/imagenet/checkpoints/resnet50-epoch=89-val_acc1=0.7500.ckpt \
+   /home/ubuntu/streamlit-imagenet-app/models/
+```
+
+**Supported Checkpoint Formats:**
+- **PyTorch Lightning checkpoints** (.ckpt) - Automatically detects and loads from Lightning format
+- **Standard PyTorch checkpoints** (.pth, .pt) with `'model_state_dict'` key
+- **Direct state dict** - Raw model weights
+
+The model loader automatically:
+- Detects PyTorch Lightning checkpoint format
+- Extracts hyperparameters (num_classes, etc.)
+- Removes the `model.` prefix from Lightning state dict keys
+- Handles different checkpoint structures
 
 ### Configuration Options
 
@@ -142,12 +173,60 @@ To enable GPU support in Docker:
 
 ## 📝 Model Format
 
-The application expects PyTorch models trained on ImageNet (1000 classes). If you're using a custom model:
+### Training Integration
 
-1. Ensure it outputs 1000 classes
-2. Save it as a PyTorch checkpoint (.pth or .pt)
-3. Place it in the `models/` directory
-4. Update the model architecture in `utils/model_loader.py` if needed
+This application is designed to work seamlessly with the ImageNet training codebase:
+
+**Training Repository:** `/home/ubuntu/imagenet`
+
+The training uses:
+- **Framework:** PyTorch Lightning
+- **Architecture:** ResNet50 (torchvision)
+- **Image Size:** 224x224
+- **Normalization:** ImageNet standard (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+- **Classes:** 1000 (ImageNet-1K)
+
+### Checkpoint Structure
+
+PyTorch Lightning checkpoints contain:
+```python
+{
+    'state_dict': {...},           # Model weights with 'model.' prefix
+    'hyper_parameters': {          # Training config
+        'num_classes': 1000,
+        'lr': 0.1,
+        'optimizer': 'sgd',
+        ...
+    },
+    'epoch': 89,
+    'global_step': ...,
+    ...
+}
+```
+
+The inference app automatically handles this structure.
+
+### Standalone Inference Script
+
+For command-line inference without the web UI:
+
+```bash
+# Using trained checkpoint
+python inference.py \
+    --image /path/to/image.jpg \
+    --checkpoint /home/ubuntu/imagenet/checkpoints/resnet50-epoch=89.ckpt \
+    --top_k 5
+
+# Using pretrained model
+python inference.py --image /path/to/image.jpg
+
+# Save results to JSON
+python inference.py \
+    --image /path/to/image.jpg \
+    --checkpoint /path/to/checkpoint.ckpt \
+    --output results.json \
+    --verbose
+```
 
 ## 🔧 Customization
 

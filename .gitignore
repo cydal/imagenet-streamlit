@@ -47,10 +47,12 @@ Thumbs.db
 .coverage
 htmlcov/
 
-# Model files (optional - uncomment if you don't want to track models)
-# models/*.pth
-# models/*.pt
-# models/*.h5
+# Model files - exclude checkpoints (they're large)
+models/*.pth
+models/*.pt
+models/*.ckpt
+models/*.h5
+models/*.onnx
 
 # Streamlit
 .streamlit/secrets.toml

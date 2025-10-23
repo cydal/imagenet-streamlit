@@ -1,0 +1,20 @@
+# Configuration for ImageNet inference app
+# Matches the training setup from /home/ubuntu/imagenet
+
+# Model settings
+model_name: resnet50
+num_classes: 1000
+
+# Image preprocessing (must match training)
+img_size: 224
+mean: [0.485, 0.456, 0.406]
+std: [0.229, 0.224, 0.225]
+
+# Default model path (can be overridden in UI)
+# Point this to your trained checkpoint
+default_model_path: null  # e.g., /app/models/resnet50-epoch=89.ckpt
+
+# Inference settings
+default_top_k: 5
+default_confidence_threshold: 0.0
+max_upload_size_mb: 200
