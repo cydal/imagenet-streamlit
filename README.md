@@ -2,7 +2,7 @@
 title: ImageNet Vision AI
 emoji: 🖼️
 colorFrom: purple
-colorTo: violet
+colorTo: pink
 sdk: docker
 app_port: 7860
 pinned: false
