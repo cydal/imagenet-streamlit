@@ -33,12 +33,22 @@ RUN mkdir -p /app/models /app/images && \
 USER user
 
 # Download model checkpoint from Hugging Face Hub
-RUN pip install --no-cache-dir huggingface-hub && \
+RUN pip install --no-cache-dir huggingface-hub requests && \
     python -c "from huggingface_hub import hf_hub_download; \
     hf_hub_download(repo_id='Sijuade/resnett50-imagenet', \
                     filename='acc1=76.2100.ckpt', \
                     local_dir='/app/models', \
                     local_dir_use_symlinks=False)"
+
+# Download sample images from ImageNet sample repository
+RUN python -c "import os, requests; \
+    samples = ['n01440764_tench.JPEG', 'n01443537_goldfish.JPEG', 'n01484850_great_white_shark.JPEG', \
+               'n01491361_tiger_shark.JPEG', 'n01494475_hammerhead.JPEG', 'n01496331_electric_ray.JPEG', \
+               'n01498041_stingray.JPEG', 'n01514668_cock.JPEG', 'n01514859_hen.JPEG', 'n01518878_ostrich.JPEG']; \
+    base_url = 'https://raw.githubusercontent.com/EliSchwartz/imagenet-sample-images/master/'; \
+    os.makedirs('/app/images', exist_ok=True); \
+    [open(f'/app/images/{f}', 'wb').write(requests.get(base_url + f).content) for f in samples]; \
+    print(f'Downloaded {len(samples)} sample images')"
 
 # Set home to the user's home directory
 ENV HOME=/home/user \

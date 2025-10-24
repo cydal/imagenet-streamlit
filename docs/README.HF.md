@@ -36,9 +36,10 @@ A beautiful, production-ready Streamlit application for performing inference on 
 ### 🎯 Model Details
 - **Architecture**: ResNet50
 - **Dataset**: ImageNet (1000 classes)
-- **Accuracy**: 76.23% top-1 accuracy
+- **Accuracy**: 76.21% top-1 accuracy
 - **Framework**: PyTorch + PyTorch Lightning
 - **Input Size**: 224×224 RGB images
+- **Model Hub**: [Sijuade/resnett50-imagenet](https://huggingface.co/Sijuade/resnett50-imagenet)
 
 ## 🎨 How to Use
 
@@ -66,7 +67,7 @@ The model can classify:
 
 ## 📝 About
 
-This application demonstrates state-of-the-art image classification using a ResNet50 model trained on the ImageNet dataset. The model achieves 76.23% top-1 accuracy across 1000 object categories.
+This application demonstrates state-of-the-art image classification using a ResNet50 model trained on the ImageNet dataset. The model achieves 76.21% top-1 accuracy across 1000 object categories.
 
 ### Features Highlights:
 - ✨ Beautiful gradient UI with animations
@@ -79,7 +80,8 @@ This application demonstrates state-of-the-art image classification using a ResN
 
 - [GitHub Repository](https://github.com/cydal/imagenet-streamlit)
 - [Model Training Code](https://github.com/cydal/ImageNet-Full-training)
-- [Hugging Face Space](https://huggingface.co/spaces/YOUR_USERNAME/imagenet-vision-ai)
+- [Model Repository](https://huggingface.co/Sijuade/resnett50-imagenet)
+- [Hugging Face Space](https://huggingface.co/spaces/Sijuade/imagenet-vision-ai)
 
 ## 📄 License
 

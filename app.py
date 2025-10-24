@@ -31,14 +31,18 @@ st.markdown("""
     <style>
     /* Main header styling */
     .main-header {
-        font-size: 3.5rem;
-        font-weight: 800;
-        text-align: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-        letter-spacing: -1px;
+        font-size: 3.5rem !important;
+        font-weight: 800 !important;
+        text-align: center !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 1rem !important;
+        margin-top: 0 !important;
+        padding: 1rem 0 !important;
+        letter-spacing: -1px !important;
+        display: block !important;
     }
     
     .subtitle {
@@ -258,7 +262,7 @@ def main():
     st.markdown('<p class="subtitle">Powered by Deep Learning • Upload images and get instant predictions</p>', unsafe_allow_html=True)
     
     # Hardcoded checkpoint path
-    checkpoint_path = "/home/ubuntu/imagenet/checkpoints/acc1=76.2260.ckpt"
+    checkpoint_path = "models/acc1=76.2100.ckpt"
     
     # Sidebar configuration
     with st.sidebar:
@@ -303,7 +307,7 @@ def main():
         
         **Model:**
         - ResNet50 trained on ImageNet
-        - Accuracy: 76.23%
+        - Accuracy: 76.21%
         - 1000 classes
         """)
     

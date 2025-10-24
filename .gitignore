@@ -54,13 +54,12 @@ models/*.ckpt
 models/*.h5
 models/*.onnx
 
-# Sample images - exclude actual image files
+# Sample images - include JPEG files for demo, exclude others
 images/*.jpg
-images/*.jpeg
 images/*.png
 images/*.webp
 images/*.gif
-images/*
+# Keep JPEG sample images for the app
 
 # Streamlit
 .streamlit/secrets.toml

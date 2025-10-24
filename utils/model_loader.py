@@ -90,8 +90,9 @@ def load_model(model_path=None):
     else:
         # Load pretrained model as default
         if model_path:
-            print(f"Warning: Model path '{model_path}' does not exist")
-        print("Loading pretrained ResNet50 model from torchvision")
+            print(f"Note: Model path '{model_path}' not found, using pretrained model")
+        else:
+            print("Loading pretrained ResNet50 model from torchvision")
         model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
     
     model.to(device)
