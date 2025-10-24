@@ -176,13 +176,12 @@ def get_sample_images():
     if not images_dir.exists():
         return []
     
-    # Get all image files
-    image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.webp', '*.gif']
+    # Get all image files (including .JPEG extension)
+    image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.webp', '*.gif', '*.JPEG', '*.JPG']
     sample_images = []
     
     for ext in image_extensions:
         sample_images.extend(images_dir.glob(ext))
-        sample_images.extend(images_dir.glob(ext.upper()))
     
     return sorted(sample_images)
 
@@ -257,8 +256,8 @@ def display_prediction_card(rank: int, class_name: str, confidence: float, is_to
 
 
 def main():
-    # Header with gradient
-    st.markdown('<h1 class="main-header">🖼️ ImageNet Vision AI</h1>', unsafe_allow_html=True)
+    # Header with gradient - using st.title for better visibility
+    st.title("🖼️ ImageNet Vision AI")
     st.markdown('<p class="subtitle">Powered by Deep Learning • Upload images and get instant predictions</p>', unsafe_allow_html=True)
     
     # Hardcoded checkpoint path
