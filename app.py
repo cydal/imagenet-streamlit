@@ -303,11 +303,21 @@ def main():
         - ⚡ Real-time inference
         - 📊 Beautiful visualizations
         - 💾 Export predictions to JSON
+        - 🖼️ 4 sample images included
         
         **Model:**
-        - ResNet50 trained on ImageNet
-        - Accuracy: 76.21%
+        - ResNet50 trained on ImageNet-1K
+        - Accuracy: 76.21% top-1
         - 1000 classes
+        - Mixed precision (FP16)
+        - LAMB optimizer
+        """)
+        
+        st.markdown("### 🔗 Links")
+        st.markdown("""
+        - [🤗 Model Hub](https://huggingface.co/Sijuade/resnett50-imagenet)
+        - [📚 Training Code](https://github.com/cydal/ImageNet-Full-training)
+        - [💻 App Code](https://github.com/cydal/imagenet-streamlit)
         """)
     
     # Load model once
@@ -555,7 +565,16 @@ def main():
         <div style='text-align: center; padding: 2rem 0;'>
             <p style='color: #9ca3af; font-size: 0.9rem;'>
                 Built with ❤️ using Streamlit & PyTorch<br>
-                <strong>ImageNet Vision AI</strong> • Powered by Deep Learning
+                <strong>ImageNet Vision AI</strong> • 76.21% Top-1 Accuracy on ImageNet-1K<br>
+                <a href='https://github.com/cydal/ImageNet-Full-training' target='_blank' style='color: #667eea; text-decoration: none;'>
+                    📚 Training Code
+                </a> • 
+                <a href='https://huggingface.co/Sijuade/resnett50-imagenet' target='_blank' style='color: #667eea; text-decoration: none;'>
+                    🤗 Model Hub
+                </a> • 
+                <a href='https://github.com/cydal/imagenet-streamlit' target='_blank' style='color: #667eea; text-decoration: none;'>
+                    💻 App Code
+                </a>
             </p>
         </div>
     """, unsafe_allow_html=True)
