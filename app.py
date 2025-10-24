@@ -454,7 +454,46 @@ def main():
                     use_column_width=True
                 )
     
-    else:
+    # Process selected sample image (outside the if/else to avoid rerun loop)
+    if 'selected_sample' in st.session_state:
+        sample_path = st.session_state['selected_sample']
+        del st.session_state['selected_sample']
+        
+        st.markdown("---")
+        st.markdown(f"## 🖼️ Sample Image: {Path(sample_path).name}")
+        
+        img_col, pred_col = st.columns([1, 1])
+        
+        with img_col:
+            try:
+                image = Image.open(sample_path).convert('RGB')
+                st.markdown('<div class="image-container">', unsafe_allow_html=True)
+                st.image(image, use_column_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                st.caption(f"📐 Dimensions: {image.size[0]} × {image.size[1]} pixels")
+            except Exception as e:
+                st.error(f"❌ Error loading image: {str(e)}")
+        
+        with pred_col:
+            with st.spinner("🔮 Analyzing image..."):
+                try:
+                    predictions, inference_time = process_single_image(
+                        image, model, top_k, confidence_threshold
+                    )
+                    
+                    if predictions:
+                        st.success(f"✨ Analysis complete in {inference_time:.3f}s")
+                        
+                        for rank, (class_name, confidence) in enumerate(predictions, 1):
+                            display_prediction_card(rank, class_name, confidence)
+                    else:
+                        st.warning("No predictions above the confidence threshold")
+                        
+                except Exception as e:
+                    st.error(f"❌ Error during inference: {str(e)}")
+    
+    elif not uploaded_files:
         # Empty state with beautiful design
         st.markdown("""
             <div class="upload-section">
@@ -470,7 +509,7 @@ def main():
         """, unsafe_allow_html=True)
         
         # Show sample images if available
-        sample_images = get_sample_images()
+        sample_images = get_sample_images()[:4]  # Limit to 4 images
         if sample_images:
             st.markdown("---")
             st.markdown("### 🎨 Try Sample Images")
@@ -505,54 +544,10 @@ def main():
                                 # Button to run prediction on this image
                                 if st.button(f"Predict", key=f"sample_{idx}"):
                                     st.session_state['selected_sample'] = str(img_path)
-                                    st.rerun()
                                     
                                 st.caption(img_path.name)
                             except Exception as e:
                                 st.error(f"Error loading {img_path.name}: {str(e)}")
-        
-        # Process selected sample image
-        if 'selected_sample' in st.session_state:
-            sample_path = st.session_state['selected_sample']
-            del st.session_state['selected_sample']
-            
-            st.markdown("---")
-            st.markdown(f"## 🖼️ Sample Image: {Path(sample_path).name}")
-            
-            img_col, pred_col = st.columns([1, 1])
-            
-            with img_col:
-                try:
-                    image = Image.open(sample_path).convert('RGB')
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    st.image(image, use_column_width=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    st.caption(f"📐 Dimensions: {image.size[0]} × {image.size[1]} pixels")
-                except Exception as e:
-                    st.error(f"❌ Error loading image: {str(e)}")
-            
-            with pred_col:
-                with st.spinner("🔮 Analyzing image..."):
-                    try:
-                        predictions, inference_time = process_single_image(
-                            image, model, top_k, confidence_threshold
-                        )
-                        
-                        if show_inference_time:
-                            st.info(f"⚡ Inference time: {inference_time*1000:.1f}ms")
-                        
-                        if predictions:
-                            st.markdown("### 🎯 Predictions")
-                            
-                            for rank, (class_name, confidence) in enumerate(predictions, 1):
-                                display_prediction_card(rank, class_name, confidence)
-                        else:
-                            st.warning(f"⚠️ No predictions above {confidence_threshold:.0%} confidence threshold")
-                    
-                    except Exception as e:
-                        st.error(f"❌ Error during inference: {str(e)}")
-                        st.exception(e)
     
     # Footer
     st.markdown("---")
