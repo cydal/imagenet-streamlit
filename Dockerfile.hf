@@ -14,7 +14,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
-    software-properties-common \
     git \
     wget \
     && rm -rf /var/lib/apt/lists/*
@@ -32,6 +31,14 @@ RUN mkdir -p /app/models /app/images && \
 
 # Switch to user
 USER user
+
+# Download model checkpoint from Hugging Face Hub
+RUN pip install --no-cache-dir huggingface-hub && \
+    python -c "from huggingface_hub import hf_hub_download; \
+    hf_hub_download(repo_id='Sijuade/resnett50-imagenet', \
+                    filename='acc1=76.2100.ckpt', \
+                    local_dir='/app/models', \
+                    local_dir_use_symlinks=False)"
 
 # Set home to the user's home directory
 ENV HOME=/home/user \
