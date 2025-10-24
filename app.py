@@ -239,18 +239,12 @@ def main():
     st.markdown('<h1 class="main-header">🖼️ ImageNet Vision AI</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">Powered by Deep Learning • Upload images and get instant predictions</p>', unsafe_allow_html=True)
     
+    # Hardcoded checkpoint path
+    checkpoint_path = "/home/ubuntu/imagenet/checkpoints/acc1=76.2260.ckpt"
+    
     # Sidebar configuration
     with st.sidebar:
         st.markdown("### ⚙️ Configuration")
-        
-        # Model selection
-        model_path = st.text_input(
-            "Model Checkpoint",
-            placeholder="/app/models/resnet50-epoch=89.ckpt",
-            help="Path to PyTorch Lightning checkpoint. Leave empty for pretrained model."
-        )
-        
-        st.markdown("---")
         
         # Inference settings
         st.markdown("### 🎯 Inference Settings")
@@ -289,16 +283,16 @@ def main():
         - 📊 Beautiful visualizations
         - 💾 Export predictions to JSON
         
-        **Supported:**
-        - Lightning checkpoints (.ckpt)
-        - PyTorch models (.pth, .pt)
-        - Pretrained ResNet50
+        **Model:**
+        - ResNet50 trained on ImageNet
+        - Accuracy: 76.23%
+        - 1000 classes
         """)
     
     # Load model once
     with st.spinner("🔄 Loading model..."):
         try:
-            model = initialize_model(model_path if model_path else None)
+            model = initialize_model(checkpoint_path)
             
             if show_model_info:
                 info = get_model_info(model)
@@ -426,7 +420,7 @@ def main():
             
             with col2:
                 results_json = json.dumps({
-                    "model": model_path if model_path else "pretrained_resnet50",
+                    "model": checkpoint_path,
                     "total_images": len(uploaded_files),
                     "results": all_results
                 }, indent=2)

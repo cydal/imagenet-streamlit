@@ -46,6 +46,9 @@ def load_model(model_path=None):
             # Load state dict - Lightning wraps model in 'model' attribute
             state_dict = checkpoint['state_dict']
             
+            # Remove EMA keys if present (from EMA callback)
+            state_dict = {k: v for k, v in state_dict.items() if not k.startswith('ema_model.')}
+            
             # Remove 'model.' prefix from keys if present (Lightning wrapper)
             new_state_dict = {}
             for key, value in state_dict.items():
@@ -55,7 +58,8 @@ def load_model(model_path=None):
                 else:
                     new_state_dict[key] = value
             
-            model.load_state_dict(new_state_dict)
+            # Load with strict=False to handle any missing/unexpected keys
+            model.load_state_dict(new_state_dict, strict=False)
             print(f"Successfully loaded Lightning checkpoint")
             
         elif isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
