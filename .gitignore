@@ -54,5 +54,13 @@ models/*.ckpt
 models/*.h5
 models/*.onnx
 
+# Sample images - exclude actual image files
+images/*.jpg
+images/*.jpeg
+images/*.png
+images/*.webp
+images/*.gif
+images/*
+
 # Streamlit
 .streamlit/secrets.toml

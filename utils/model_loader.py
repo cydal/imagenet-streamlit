@@ -49,17 +49,29 @@ def load_model(model_path=None):
             # Remove EMA keys if present (from EMA callback)
             state_dict = {k: v for k, v in state_dict.items() if not k.startswith('ema_model.')}
             
-            # Remove 'model.' prefix from keys if present (Lightning wrapper)
+            # Remove Lightning and torch.compile prefixes from keys
+            # Handles: 'model._orig_mod.xxx', 'model.xxx', or 'xxx'
             new_state_dict = {}
             for key, value in state_dict.items():
-                if key.startswith('model.'):
-                    new_key = key[6:]  # Remove 'model.' prefix
-                    new_state_dict[new_key] = value
-                else:
-                    new_state_dict[key] = value
+                new_key = key
+                
+                # Remove 'model._orig_mod.' prefix (from compiled models)
+                if new_key.startswith('model._orig_mod.'):
+                    new_key = new_key[16:]  # Remove 'model._orig_mod.' prefix
+                # Remove 'model.' prefix (from non-compiled models)
+                elif new_key.startswith('model.'):
+                    new_key = new_key[6:]  # Remove 'model.' prefix
+                
+                new_state_dict[new_key] = value
             
             # Load with strict=False to handle any missing/unexpected keys
-            model.load_state_dict(new_state_dict, strict=False)
+            missing_keys, unexpected_keys = model.load_state_dict(new_state_dict, strict=False)
+            
+            if missing_keys:
+                print(f"Warning: Missing keys: {len(missing_keys)}")
+            if unexpected_keys:
+                print(f"Warning: Unexpected keys: {len(unexpected_keys)}")
+            
             print(f"Successfully loaded Lightning checkpoint")
             
         elif isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
