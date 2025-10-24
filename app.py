@@ -380,7 +380,7 @@ def main():
                     
                     # Display image in a nice container
                     st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    st.image(image, use_container_width=True)
+                    st.image(image, use_column_width=True)
                     st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Image metadata
@@ -451,7 +451,7 @@ def main():
                     data=results_json,
                     file_name=f"predictions_{len(uploaded_files)}_images.json",
                     mime="application/json",
-                    use_container_width=True
+                    use_column_width=True
                 )
     
     else:
@@ -500,7 +500,7 @@ def main():
                                     continue
                                     
                                 img = Image.open(img_path)
-                                st.image(img, use_container_width=True)
+                                st.image(img, use_column_width=True)
                                 
                                 # Button to run prediction on this image
                                 if st.button(f"Predict", key=f"sample_{idx}"):
@@ -525,7 +525,7 @@ def main():
                 try:
                     image = Image.open(sample_path).convert('RGB')
                     st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    st.image(image, use_container_width=True)
+                    st.image(image, use_column_width=True)
                     st.markdown('</div>', unsafe_allow_html=True)
                     
                     st.caption(f"📐 Dimensions: {image.size[0]} × {image.size[1]} pixels")
