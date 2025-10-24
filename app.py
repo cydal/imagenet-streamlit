@@ -257,7 +257,7 @@ def display_prediction_card(rank: int, class_name: str, confidence: float, is_to
 
 def main():
     # Header with gradient - using st.title for better visibility
-    st.title("🖼️ ImageNet Vision AI")
+    st.markdown('<h1 style="text-align: center;">🖼️ ImageNet Vision AI</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">Powered by Deep Learning • Upload images and get instant predictions</p>', unsafe_allow_html=True)
     
     # Hardcoded checkpoint path
@@ -476,6 +476,14 @@ def main():
             st.markdown("### 🎨 Try Sample Images")
             st.markdown("Click on a sample image below to run predictions")
             
+            # Debug: show image directory status
+            images_dir = Path("images")
+            if images_dir.exists():
+                all_files = list(images_dir.iterdir())
+                st.caption(f"Found {len(sample_images)} sample images in {images_dir.absolute()}")
+            else:
+                st.warning(f"Images directory not found at {images_dir.absolute()}")
+            
             # Display sample images in a grid
             cols_per_row = 4
             for i in range(0, len(sample_images), cols_per_row):
@@ -486,6 +494,11 @@ def main():
                         img_path = sample_images[idx]
                         with col:
                             try:
+                                # Check if file exists
+                                if not img_path.exists():
+                                    st.warning(f"File not found: {img_path}")
+                                    continue
+                                    
                                 img = Image.open(img_path)
                                 st.image(img, use_container_width=True)
                                 
@@ -496,7 +509,7 @@ def main():
                                     
                                 st.caption(img_path.name)
                             except Exception as e:
-                                st.error(f"Error loading {img_path.name}")
+                                st.error(f"Error loading {img_path.name}: {str(e)}")
         
         # Process selected sample image
         if 'selected_sample' in st.session_state:
